@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employees Overview</title>
+</head>
+<body>
+
+<h2>Employees Overview</h2>
+
+<form method="get">
+    <input name="search" placeholder="Search name">
+    <button type="submit">Search</button>
+</form>
+
+<p>
+    <a href="/logout">Logout</a>
+</p>
+
+<table border="1" cellpadding="6">
+    <tr>
+        <th>Name 
+            <a href="/?sort=name_asc">↑</a>
+            <a href="/?sort=name_desc">↓</a>
+        </th>
+        <th>Department</th>
+        <th>Dependents</th>
+        <th>Projects</th>
+        <th>Total Hours
+            <a href="/?sort=hours_asc">↑</a>
+            <a href="/?sort=hours_desc">↓</a>
+        </th>
+    </tr>
+
+    {% for e in employees %}
+    <tr>
+        <td>{{ e.full_name }}</td>
+        <td>{{ e.dname }}</td>
+        <td>{{ e.num_dependents }}</td>
+        <td>{{ e.num_projects }}</td>
+        <td>{{ e.total_hours }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<p>
+    <a href="/export/employees">Download CSV</a>
+</p>
+
+
+</body>
+</html>
