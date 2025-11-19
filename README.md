@@ -22,7 +22,8 @@ username: viewer
 password: viewer123
 
 ## Running the Application
-From inside the project folder:
-python3 app.py
+From inside the project folder, type 
+
+*** python3 app.py
 
 ### then visit http://127.0.0.1:5000/
