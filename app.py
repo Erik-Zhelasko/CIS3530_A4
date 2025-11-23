@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, Blueprint
 import psycopg2
 import psycopg2.extras
 from functools import wraps
