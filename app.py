@@ -3,9 +3,18 @@ import psycopg2
 import psycopg2.extras
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from routes.a3 import a3bp
+from routes.a5 import a5bp
+from routes.a6 import a6bp
 app = Flask(__name__)
 app.secret_key = "CHANGE_THIS_SECRET_KEY"   # Change this before submission
+
+
+
+# Blueprint Registers
+app.register_blueprint(a3bp)
+app.register_blueprint(a5bp)
+app.register_blueprint(a6bp)
 
 # ---------------------------
 # DATABASE CONNECTION
