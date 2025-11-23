@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees</title>
+  </head>
+  <body>
+    <main>
+        <h1>Employees</h1>  
+    </main>
+    <table id="tab">
+      <tr>
+        <th>First Name</th>
+        <th>Middle Initial</th>
+        <th>Last Name</th>
+        <th>SSN</th>
+        <th>Address</th>
+        <th>Sex</th>
+        <th>Salary</th>
+        <th>Supervisor SSN</th>
+        <th>Department Number</th>
+        <th>Date of Birth</th>
+        <th>Employment Date</th>
+        
+      </tr>
+
+</table>
+
+  <dialog id="ePopup">
+    <h2 id="ssnHeader">Editing Employee</h2>
+    <table>
+      <tr>
+        <th>Address</th>
+        <th>Salary</th>
+        <th>Department #</th>
+      </tr>
+      <tr>
+        <th ><input type="text" id="addressField" /></th>
+        <th><input type="text" id="salaryField" /></th>
+        <th><input type="text" id="departmentField" /></th>
+      </tr>
+    </table>
+    <button type="button" autofocus onclick="hideModal('ePopup')">Cancel</button>
+    <button type="button" autofocus onclick="hideModal('ePopup');fetchPatch().then(reloadTable())">Save Changes</button>
+
+  </dialog>
+
+    <dialog id="dPopup">
+    <h2 id="ssnHeader">Confirm Delete?</h2>
+    <button type="button" autofocus onclick="hideModal('dPopup')">Cancel</button>
+    <button type="button" autofocus onclick="hideModal('dPopup');fetchDelete().then(reloadTable())">Confirm Delete</button>
+
+  </dialog>
+
+    <script src="{{ url_for('static', filename='a5.js') }}"></script>
+
+
+
+
+  </body>
+
+
+
+</html>
+
+
+
+<style>
+
+
+  #addField {
+      width: 100px;        
+      padding: 5px 8px;   
+      box-sizing: border-box; 
+  }
+  #sButton {
+  height: 20px;
+  width: 20px;
+  background-color: rgb(0, 102, 255);
+}
+#cButton {
+  height: 20px;
+  width: 20px;
+  background-color: rgb(234, 0, 255);
+}
+
+#eButton {
+  height: 20px;
+  width: 20px;
+  background-color: rgb(255, 255, 0);
+}
+#dButton {
+  height: 20px;
+  width: 20px;
+  background-color: rgb(255, 0, 0);
+}
+#aButton {
+  height: 20px;
+  width: 20px;
+  background-color: rgb(0, 255, 0);
+}
+table {
+  border-collapse: collapse;
+}
+th,td {
+  border: 2px solid rgb(0,0,0)
+}
+</style>
