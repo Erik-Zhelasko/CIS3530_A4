@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, flash, Blueprint
 import psycopg2
 import psycopg2.extras
+import psycopg
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from routes.a3 import a3bp
@@ -148,6 +149,12 @@ def home():
         selected_dept=dept,        # NEW
         search=search              # so form remembers search
     )
+
+# Blueprint Registers
+app.register_blueprint(a3bp)
+app.register_blueprint(a5bp)
+app.register_blueprint(a6bp)
+
 
 # ---------------------------
 # ADMIN ONLY DECORATOR (RBAC)
