@@ -12,10 +12,6 @@ app.secret_key = "CHANGE_THIS_SECRET_KEY"   # Change this before submission
 
 
 
-# Blueprint Registers
-app.register_blueprint(a3bp)
-app.register_blueprint(a5bp)
-app.register_blueprint(a6bp)
 
 # ---------------------------
 # DATABASE CONNECTION
