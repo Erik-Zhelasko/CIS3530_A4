@@ -1,5 +1,5 @@
 # import the Flask library
-from flask import Flask, render_template, request, jsonify, Blueprint
+from flask import Flask, redirect, render_template, request, jsonify, Blueprint
 import psycopg
 import base64
 
@@ -8,7 +8,7 @@ a3bp = Blueprint("a3", __name__)
 DATABASE_CONFIG = {
     "dbname": "assn4",
     "user": "postgres",
-    "password": "uku04vrr!",
+    "password": base64.b64decode("VHZva2lkcw==").decode('utf-8'),
     "host": "localhost",
     "port": "5432",
 }
@@ -22,14 +22,131 @@ def get_db_connection():
 def a3_page():
     return render_template("a3.html")
 
-# Route for project details
-@a3bp.route("/project/<int:project_id>")
-def project_detail(project_id):
-    return f"This is the project page for {project_id}"
+# Route for project details (TESTING TO SEE IF WEBSITE LINK WORKS)
+#@a3bp.route("/project/<int:project_id>")
+#def project_detail(project_id):
+#    return f"This is the project page for {project_id}"
 
-#@app.route("/project/<int:project_id>")
-#def project_detail_page(project_id):
-    #return render_template("a4.html", project_id=project_id)
+@a3bp.route("/project/<int:project_id>")
+def project_detail_page(project_id):
+    return render_template("a4.html", project_id=project_id)
+
+@a3bp.get("/API/project/<int:project_id>")
+def api_project_details(project_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT pname
+        FROM Project
+        WHERE pnumber = %s;
+    """, (project_id,))
+    proj = cur.fetchone()
+
+    if not proj:
+        return jsonify({"error": "Project not found"}), 404
+
+    cur.execute("""
+        SELECT CONCAT(E.fname, ' ', E.lname) AS full_name,
+               W.hours
+        FROM Works_On W
+        JOIN Employee E ON W.essn = E.ssn
+        WHERE W.pno = %s
+        ORDER BY full_name;
+    """, (project_id,))
+    employees = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return jsonify({
+        "project_name": proj[0],
+        "employees": [
+            {"full_name": e[0], "hours": e[1]}
+            for e in employees
+        ]
+    })
+
+@a3bp.post("/API/project_hours")
+def upsert_hours():
+    pno = request.form.get("project_id")
+    emp_id = request.form.get("employee_id")
+    hours = request.form.get("hours")
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    sql = """
+        INSERT INTO Works_On (Essn, Pno, Hours)
+        VALUES (%s, %s, %s)
+        ON CONFLICT (Essn, Pno)
+        DO UPDATE SET Hours = Works_On.Hours + EXCLUDED.Hours;
+    """
+
+    cur.execute(sql, (emp_id, pno, hours))
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    return redirect(f"/project/{pno}")
+
+
+@a3bp.get("/API/employees/A4")
+def employees_for_a4():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        SELECT ssn, fname || ' ' || lname AS full_name
+        FROM Employee
+        ORDER BY lname, fname;
+    """
+
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    employees = [
+        {"ssn": r[0], "full_name": r[1]}
+    for r in rows ]
+
+    return jsonify(employees)
+
+
+@a3bp.post("/API/project/upsert")
+def upsert_workson():
+    data = request.get_json()
+
+    project_id = data.get("project_id")
+    essn = data.get("essn")
+    hours = data.get("hours")
+
+    # convert hours to int
+    try:
+        hours = float(hours)
+    except:
+        return jsonify({"message": "Invalid hours"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        INSERT INTO Works_On (Essn, Pno, Hours)
+        VALUES (%s, %s, %s)
+        ON CONFLICT (Essn, Pno)
+        DO UPDATE SET Hours = Works_On.Hours + EXCLUDED.Hours;
+    """
+
+    cursor.execute(query, (essn, project_id, hours))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Hours updated successfully!"})
+
 
 
 @a3bp.get("/API/projects")
@@ -94,5 +211,3 @@ def get_projects_table():
 
 
     return jsonify(result)
-
-
