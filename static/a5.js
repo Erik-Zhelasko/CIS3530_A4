@@ -76,10 +76,11 @@ function generateTableButtons(element) {
     const cancelButton = document.createElement("button");
     saveButton.setAttribute("id","sButton");
     saveButton.setAttribute("onclick","saveNewEmployee();")
+    saveButton.textContent = "Save";
 
     cancelButton.setAttribute("id","cButton");
     cancelButton.setAttribute("onclick","closeAddMode();")
-
+    cancelButton.textContent = "Cancel";
     const td = document.createElement("td");
     td.appendChild(cancelButton);
     td.appendChild(saveButton);
@@ -95,13 +96,16 @@ function generateTableButtons(element) {
     const addButton = document.createElement("button");
     
     addButton.setAttribute("id","aButton");
-    addButton.setAttribute("onclick","createEmployee();")
+    addButton.setAttribute("onclick","createEmployee();");
+    addButton.textContent = "Add Employee";
 
     nextButton.setAttribute("id","eButton");
     nextButton.setAttribute("onclick","nextPage()");
+    nextButton.textContent = "Next";
 
     prevButton.setAttribute("id","dButton");
     prevButton.setAttribute("onclick","prevPage()");
+    prevButton.textContent = "Previous";
 
     const td = document.createElement("td");
     td.appendChild(addButton);
@@ -113,8 +117,8 @@ function generateTableButtons(element) {
 
   }
 }
-
 function generateInputRow(element){
+  const numonly = ["ssn","salary","supervisor ssn","department number"];
   if (!inAddMode) {
     return;
   }
@@ -122,11 +126,18 @@ function generateInputRow(element){
   for (let i = 0; i < rowsize; i++) {
     const td = document.createElement("td");
     const input = document.createElement("input");
+    console.log(headers[i].toLowerCase())
+    console.log(numonly.includes(headers[i].toLowerCase()))
     if (headers[i].toLowerCase().includes("date")) {
       input.setAttribute("Type","date")
     }
+    else if (numonly.includes(headers[i].toLowerCase())) {
+      input.setAttribute("Type","number");
+      input.setAttribute("placeholder",headers[i])
+    }
     else {
       input.setAttribute("placeholder",headers[i])
+
     }
     input.setAttribute("id","addField"+i)
     td.appendChild(input)
