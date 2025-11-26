@@ -29,7 +29,7 @@ async function loadProjectDetails() {
 }
 
 async function loadEmployeeDropdown() {
-    const res = await fetch("/API/employees");
+    const res = await fetch("/API/employees/A4");
     const employees = await res.json();
 
     const dropdown = document.getElementById("employeeDropdown");
@@ -65,4 +65,3 @@ async function handleUpsert(event) {
     // Refresh employee table
     loadProjectDetails();
 }
-
