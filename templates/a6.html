@@ -4,23 +4,18 @@
     <title>Projects</title>
 </head>
 <body>
-    <h1>Project List</h1>
-
-    <table border="2">
+    <h1>Management Overview</h1>
+    <table id="tab" border = 2>
         <thead>
             <tr>
-                <th>Project Name</th>
-                <th>Department</th>
-                <th id="sortHeadcount" style="cursor:pointer; text-decoration:underline;">
-                    Headcount <span id="arrowHeadcount"></span>
-                </th>
-                <th id="sortHours" style="cursor:pointer; text-decoration:underline;">
-                    Total Hours <span id="arrowHours"></span>
-                </th>
+                <th>Department Name</th>
+                <th>Department Number</th>
+                <th>Manager Name</th>
+                <th>Department Employee Count</th>
+                <th>Department Total Hours</th>
             </tr>
         </thead>
 
-        <tbody id="projectRows"></tbody>
     </table>
 
     <script src="/static/a6.js"></script>

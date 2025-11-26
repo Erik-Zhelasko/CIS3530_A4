@@ -23,3 +23,21 @@ CREATE INDEX IF NOT EXISTS idx_works_on_essn
 INSERT INTO app_user (username, password_hash, role)
 VALUES ('viewer', 'scrypt:32768:8:1$T7lEUlGSypoIFbXy$92ade96a579e98aa69ca3dfcb35d4a8bd20ed6105ee2dc353a157ae3a211be7205113d85c1e45f99d18dd7fb3a0b53eceeccf1d65983c9e26830b3ee79c50584', 'viewer')
 ON CONFLICT (username) DO NOTHING;
+
+CREATE VIEW managers_overview AS
+SELECT 
+	d.dname,
+	d.dnumber,
+	e.fname,
+	e.minit,
+	e.lname,
+	COUNT(e2.ssn),
+	SUM(w.hours)
+FROM department d
+LEFT JOIN employee e
+	ON d.mgr_ssn = e.ssn
+LEFT JOIN employee e2
+	ON e2.dno = d.dnumber
+LEFT JOIN works_on w
+	ON w.essn = e2.ssn
+GROUP BY d.dname,d.dnumber,e.fname,e.minit,e.lname;

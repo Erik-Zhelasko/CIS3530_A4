@@ -1,83 +1,48 @@
-let currentSort = "";
-let currentDir = "asc";
+let database;
+let url = "/API/manager_overview";
+function loadMOverview() {
+    const element = document.getElementById("tab");
+    for (let t = 0; t< database.length; t++) {
+        let newTr = document.createElement("tr")
+        let newtd1 = document.createElement("td")
+        if (database[t][2] == null){
+            database[t][2] = "N/A";
+            database[t][3] = "";
+            database[t][4] = "";
+        }
+        database[t][5] = (database[t][5] == null) ? 0 : database[t][5];
+        database[t][6] = (database[t][6] == null) ? 0 : database[t][6];
 
-async function loadProjects() {
-    let url = "/API/projects";
+        newtd1.appendChild(document.createTextNode(database[t][0]))
+        newTr.appendChild(newtd1)
+        element.appendChild(newTr)
 
-    // Add sorting for Headcount and Hours
-    if (currentSort !== "") {
-        url += `?sort=${currentSort}&dir=${currentDir}`;
-    }
+        newtd1 = document.createElement("td")
+        newtd1.appendChild(document.createTextNode(database[t][1]))
+        newTr.appendChild(newtd1)
+        element.appendChild(newTr)
 
-    const res = await fetch(url);
-    const data = await res.json();
+        newtd1 = document.createElement("td")
+        newtd1.appendChild(document.createTextNode(database[t][2]+ " " + database[t][3]+" "+ database[t][4]))
+        newTr.appendChild(newtd1)
+        element.appendChild(newTr)
 
-    const body = document.getElementById("projectRows");
-    body.innerHTML = "";
 
-    data.forEach(row => {
-        const tr = document.createElement("tr");
+        newtd1 = document.createElement("td")
+        newtd1.appendChild(document.createTextNode(database[t][5]))
+        newTr.appendChild(newtd1)
+        element.appendChild(newTr)
 
-        // Project name cell (with link)
-        let tdName = tr.insertCell();
-        tdName.innerHTML = `<a href="/project/${row.project_id}">${row.project_name}</a>`;
-
-        // Department
-        let tdDept = tr.insertCell();
-        tdDept.textContent = row.department_name;
-        
-        // Headcount
-        let tdHead = tr.insertCell();
-        tdHead.textContent = row.headcount;
-
-        // Total hours
-        let tdHours = tr.insertCell();
-        tdHours.textContent = row.total_hours;
-        body.appendChild(tr);
-
-    });
-}
-
-function updateArrows() {
-    // Clear all arrows (ex. Hours is sorted after headcount, so headcount arrow should be cleared)
-    document.getElementById("arrowHeadcount").textContent = "";
-    document.getElementById("arrowHours").textContent = "";
-
-    // Apply the correct arrow
-    const arrow = currentDir === "asc" ? "▲" : "▼";
-
-    if (currentSort === "headcount") {
-        document.getElementById("arrowHeadcount").textContent = arrow;
-    } 
-    else if (currentSort === "total_hours") {
-        document.getElementById("arrowHours").textContent = arrow;
+        newtd1 = document.createElement("td")
+        newtd1.appendChild(document.createTextNode(database[t][6]))
+        newTr.appendChild(newtd1)
+        element.appendChild(newTr)
     }
 }
+async function loadTable(endpoint) {
+    const table = await fetch(endpoint);
+    database = await table.json();
+    loadMOverview();
+}
 
-// Headcount click event
-document.getElementById("sortHeadcount").addEventListener("click", () => {
-    if (currentSort === "headcount") {
-        currentDir = currentDir === "asc" ? "desc" : "asc"; // toggle
-    } else {
-        currentSort = "headcount";
-        currentDir = "asc";
-    }
-    updateArrows();
-    loadProjects();
-});
-
-// Hours click event
-document.getElementById("sortHours").addEventListener("click", () => {
-    if (currentSort === "total_hours") {
-        currentDir = currentDir === "asc" ? "desc" : "asc"; // toggle
-    } else {
-        currentSort = "total_hours";
-        currentDir = "asc";
-    }
-    updateArrows();
-    loadProjects();
-});
-
-loadProjects();
-
-
+loadTable(url);
