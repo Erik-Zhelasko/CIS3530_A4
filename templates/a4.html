@@ -1,1 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>A4 Project Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        table th {
+            background-color: #f2f2f2;
+        }
+        form {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background: #fafafa;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            margin-top: 5px;
+            padding: 6px;
+            width: 200px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 8px 14px;
+        }
+    </style>
+</head>
 
+<body>
+
+    <h1 id="projectTitle">Loading...</h1>
+
+    <h2>Employees on this Project</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+        <tbody id="employeeRows">
+        </tbody>
+    </table>
+
+    <h2>Add/Update Hours</h2>
+    <form id="upsertForm">
+        <label>
+            Employee:
+            <select id="employeeDropdown" required></select>
+        </label>
+
+        <label>
+            Hours to Add:
+            <input type="number" id="hoursInput" min="1" required>
+        </label>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+    const PROJECT_ID = "{{ project_id }}";
+    </script>
+
+
+    <script src="/static/a4.js"></script>
+
+</body>
+</html>
